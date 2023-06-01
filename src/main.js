@@ -2,6 +2,7 @@ let stage, canvasW, canvasH, canvas, preload, sliderContainer, containerZoom, co
 
 const paddingTop = 50;
 const paddingBottom = 150;
+const colorNavbar = "white";
 
 function init() {
     canvas = document.getElementById("myCanvas");
@@ -41,6 +42,8 @@ function setUp() {
     preload.on("fileload", handleFileLoad);
     preload.loadManifest(manifest, true, "images/");
 
+    setNavBar();
+
     containerZoom = new createjs.Container();
     containerZoom.mouseEnabled = false;
 
@@ -56,7 +59,7 @@ function setUp() {
 
     const graphics = new createjs.Graphics()
     graphics.beginFill("rgba(255, 255, 255, 0.01)");
-    graphics.drawRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+    graphics.drawRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height + paddingTop);
 
     clickArea = new createjs.Shape(graphics);
 
@@ -68,7 +71,7 @@ function setUp() {
     clickArea.on("pressup", handleUp);
     clickArea.on("pressmove", handleMove);
 
-    // setNavBar();
+
 }
 
 function resize() {
@@ -91,29 +94,100 @@ function setNavBar() {
     navbarContainer = new createjs.Container();
     stage.addChild(navbarContainer)
     drawArrows();
+    drawLines();
+    drawBtnHome();
+    drawPagesCount();
+}
+
+function drawPagesCount() {
+    let text = new createjs.Text("/ 52", "20px Arial", colorNavbar);
+    text.textAlign = "right"
+    text.x = canvas.width - paddingTop;
+    text.y = canvas.height - paddingBottom + 73;
+    navbarContainer.addChild(text);
+}
+
+function drawBtnHome() {
+    let gr = new createjs.Graphics()
+    let homeShape = new createjs.Shape(gr);
+
+    let homeBtnContainer = new createjs.Container();
+
+    gr.beginFill(colorNavbar);
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            gr.drawRect(0 + i * 12, 0 + j * 12, 5, 5)
+        }
+    }
+
+    homeBtnContainer.x = paddingTop;
+    homeBtnContainer.y = canvas.height - paddingBottom + 60;
+
+    let text = new createjs.Text("ACCUEIL", "bold 20px Arial", colorNavbar);
+    text.x = 45;
+    text.y = 13;
+    homeBtnContainer.addChild(homeShape, text)
+    navbarContainer.addChild(homeBtnContainer);
+}
+
+function drawLines() {
+    const thickness = 5
+    let gr = new createjs.Graphics()
+    let linesShape = new createjs.Shape(gr);
+
+    gr.setStrokeStyle(thickness)
+    gr.beginStroke(colorNavbar);
+
+    gr.moveTo(paddingTop, canvas.height - paddingBottom + thickness / 2)
+    gr.lineTo(canvas.width - paddingTop, canvas.height - paddingBottom + thickness / 2)
+
+    gr.moveTo(paddingTop, canvas.height - paddingBottom + 30 + thickness / 2)
+    gr.lineTo(canvas.width - paddingTop, canvas.height - paddingBottom + 30 + thickness / 2)
+
+    navbarContainer.addChild(linesShape);
 }
 
 function drawArrows() {
+    const width = 50;
+    const height = 80;
+    const thickness = 10;
+
     let gr = new createjs.Graphics()
     let arrowLeftShape = new createjs.Shape(gr);
+    let arrowRightShape = new createjs.Shape(gr);
 
-    arrowLeftShape.x = 100
-    arrowLeftShape.y = 100
+    arrowLeftShape.rotation = 180
 
-    const length = 50;
-    const thickness = 5;
+    arrowLeftShape.x = paddingTop + width / 2
+    arrowLeftShape.y = canvas.height - (paddingBottom + height)
+
+    arrowRightShape.x = canvas.width - (paddingTop + width / 2)
+    arrowRightShape.y = canvas.height - (paddingBottom + height)
+
+    arrowLeftShape.set({
+        regX: width / 2,
+        regY: height / 2,
+    })
+
+    arrowRightShape.set({
+        regX: width / 2,
+        regY: height / 2,
+    })
+
     gr.setStrokeStyle(1);
-    gr.beginStroke("white")
-    gr.beginFill("white");
+    gr.beginFill("rgba(201, 117, 91, 0.01)");
+    gr.drawCircle(width / 2, height / 2, 60)
+    gr.beginStroke(colorNavbar)
+    gr.beginFill(colorNavbar);
     gr.moveTo(0, 0)
-    gr.lineTo(length, length / 2 - thickness)
-    gr.lineTo(length, length / 2 + thickness)
-    gr.lineTo(0, length)
-    gr.lineTo(0, length - thickness)
-    gr.lineTo(length - thickness, length / 2)
+    gr.lineTo(width, height / 2 - thickness / 1.5)
+    gr.lineTo(width, height / 2 + thickness / 1.5)
+    gr.lineTo(0, height)
+    gr.lineTo(0, height - thickness)
+    gr.lineTo(width - thickness / 1.7, height / 2)
     gr.lineTo(0, thickness)
 
-    navbarContainer.addChild(arrowLeftShape);
+    navbarContainer.addChild(arrowLeftShape, arrowRightShape);
 }
 
 window.addEventListener('load', (e) => {
