@@ -18,8 +18,8 @@ function setUp() {
     maxZoom = 2;
     let g = new createjs.Graphics();
     g.setStrokeStyle(1);
-    g.beginStroke("#000000");
-    g.beginFill("black");
+    g.beginStroke("#c9755b");
+    g.beginFill("#c9755b");
     g.drawRect(0, 0, canvas.width, canvas.height);
 
     let sh = new createjs.Shape(g);
@@ -40,7 +40,7 @@ function setUp() {
     containerZoom.mouseEnabled = false;
 
     const gr = new createjs.Graphics()
-    gr.beginFill("black");
+    gr.beginFill("#c9755b");
     gr.drawCircle(0, 0, 200);
     shapeMask = new createjs.Shape(gr)
 
@@ -120,8 +120,6 @@ function handleFileLoad(e) {
 }
 
 function handleDown(e) {
-    // myWaveFilter.offsetX = myWaveFilter.center.x - (e.data.global.x - containerDezoom.x + containerDezoom.width / 2);
-    // myWaveFilter.offsetY = myWaveFilter.center.y - (e.data.global.y - containerDezoom.y + containerDezoom.height / 2);
     shapeMask.offsetX = (stage.mouseX - canvas.width / 2) - shapeMask.x
     shapeMask.offsetY = (stage.mouseY - canvas.height / 2) - shapeMask.y
     onDrag(e);
@@ -140,26 +138,13 @@ function onDrag(e) {
         x: stage.mouseX - canvas.width / 2 - shapeMask.offsetX,
         y: stage.mouseY - canvas.height / 2 - shapeMask.offsetY,
     })
-    // myWaveFilter.center.x = e.data.global.x - containerDezoom.x + containerDezoom.width / 2 + myWaveFilter.offsetX;
-    // myWaveFilter.center.y = e.data.global.y - containerDezoom.y + containerDezoom.height / 2 + myWaveFilter.offsetY;
-
-    // graphics.clear()
-    // graphics.lineStyle(0); // draw a circle, set the lineStyle to zero so the circle doesn't have an outline
-    // graphics.beginFill(0xDE3249, 1);
-    // graphics.drawCircle(e.data.global.x + myWaveFilter.offsetX, e.data.global.y + myWaveFilter.offsetY, 150);
-    // graphics.endFill();
-
-
 
     const ratioX = (stage.mouseX - canvas.width / 2 - shapeMask.offsetX - containerDezoom.x) / ((currentImage.width / 2) * currentImage.minDezoom);
     const ratioY = (stage.mouseY - canvas.height / 2 - shapeMask.offsetY - containerDezoom.y) / ((currentImage.height / 2) * currentImage.minDezoom);
 
-    const dx = ((currentImage.width / 2) * (maxZoom * currentImage.minDezoom)) * ratioX;
-    const dy = ((currentImage.height / 2) * (maxZoom * currentImage.minDezoom)) * ratioY;
+    const dx = ((currentImage.width / 2) * currentImage.minDezoom * (maxZoom - 1)) * ratioX;
+    const dy = ((currentImage.height / 2) * currentImage.minDezoom * (maxZoom - 1)) * ratioY;
 
-    // RETRANCHER LA LARGEUR DU CONTAINER DEZOOM
-
-    console.log(ratioX)
     containerZoom.x = containerDezoom.x - dx
     containerZoom.y = containerDezoom.y - dy
 }
