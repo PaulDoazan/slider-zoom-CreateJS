@@ -1,8 +1,12 @@
-let stage, canvasW, canvasH, canvas, preload, sliderContainer, containerZoom, containerDezoom, shapeMask, clickArea, currentImage, maxZoom;
+let stage, canvasW, canvasH, canvas, preload, sliderContainer, containerZoom, containerDezoom, shapeMask, maskRadius, clickArea, currentImage, maxZoom, isDragging, navbarContainer;
+
+const paddingTop = 50;
+const paddingBottom = 150;
 
 function init() {
     canvas = document.getElementById("myCanvas");
     stage = new createjs.Stage(canvas);
+    createjs.Touch.enable(stage);
     resize();
 
     createjs.Ticker.addEventListener("tick", handleTick);
@@ -16,6 +20,7 @@ function init() {
 
 function setUp() {
     maxZoom = 2;
+    maskRadius = 200;
     let g = new createjs.Graphics();
     g.setStrokeStyle(1);
     g.beginStroke("#c9755b");
@@ -41,7 +46,7 @@ function setUp() {
 
     const gr = new createjs.Graphics()
     gr.beginFill("#c9755b");
-    gr.drawCircle(0, 0, 200);
+    gr.drawCircle(0, 0, maskRadius);
     shapeMask = new createjs.Shape(gr)
 
     containerZoom.mask = shapeMask;
@@ -56,12 +61,14 @@ function setUp() {
     clickArea = new createjs.Shape(graphics);
 
     sliderContainer.addChild(containerDezoom, containerZoom, clickArea);
-    sliderContainer.set({ x: canvas.width / 2, y: canvas.height / 2 })
+    sliderContainer.set({ x: canvas.width / 2, y: canvas.height / 2 - paddingTop })
     stage.addChild(sliderContainer);
 
     clickArea.on("mousedown", handleDown);
     clickArea.on("pressup", handleUp);
     clickArea.on("pressmove", handleMove);
+
+    setNavBar();
 }
 
 function resize() {
@@ -78,6 +85,35 @@ function resize() {
 
     canvas.style.width = canvasW + 'px';
     canvas.style.height = canvasH + 'px';
+}
+
+function setNavBar() {
+    navbarContainer = new createjs.Container();
+    stage.addChild(navbarContainer)
+    drawArrows();
+}
+
+function drawArrows() {
+    let gr = new createjs.Graphics()
+    let arrowLeftShape = new createjs.Shape(gr);
+
+    arrowLeftShape.x = 100
+    arrowLeftShape.y = 100
+
+    const length = 50;
+    const thickness = 5;
+    gr.setStrokeStyle(1);
+    gr.beginStroke("white")
+    gr.beginFill("white");
+    gr.moveTo(0, 0)
+    gr.lineTo(length, length / 2 - thickness)
+    gr.lineTo(length, length / 2 + thickness)
+    gr.lineTo(0, length)
+    gr.lineTo(0, length - thickness)
+    gr.lineTo(length - thickness, length / 2)
+    gr.lineTo(0, thickness)
+
+    navbarContainer.addChild(arrowLeftShape);
 }
 
 window.addEventListener('load', (e) => {
@@ -99,7 +135,7 @@ function handleComplete(e) {
 function handleFileLoad(e) {
     const image = e.result;
     let minSizes = image.width < image.height ? { imgSize: image.width, canvasSize: 1920 } : { imgSize: image.height, canvasSize: 1080 };
-    image.minDezoom = minSizes.canvasSize / minSizes.imgSize;
+    image.minDezoom = (minSizes.canvasSize - (paddingTop + paddingBottom)) / minSizes.imgSize;
 
     const bmp = new createjs.Bitmap(image).set({
         scaleX: image.minDezoom,
@@ -120,16 +156,26 @@ function handleFileLoad(e) {
 }
 
 function handleDown(e) {
+    const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
+    if (distance(mousePoint, shapeMask) > maskRadius) {
+        isDragging = false;
+        return;
+    } else {
+        isDragging = true;
+    }
     shapeMask.offsetX = (stage.mouseX - canvas.width / 2) - shapeMask.x
     shapeMask.offsetY = (stage.mouseY - canvas.height / 2) - shapeMask.y
     onDrag(e);
 }
 
 function handleUp(e) {
+    if (!isDragging) return;
     onDrag(e);
+    isDragging = false;
 }
 
 function handleMove(e) {
+    if (!isDragging) return;
     onDrag(e);
 }
 
@@ -148,3 +194,7 @@ function onDrag(e) {
     containerZoom.x = containerDezoom.x - dx
     containerZoom.y = containerDezoom.y - dy
 }
+
+function distance(pointA, pointB) {
+    return Math.hypot(pointB.x - pointA.x, pointB.y - pointA.y);
+} 
