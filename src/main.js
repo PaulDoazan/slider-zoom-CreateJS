@@ -68,7 +68,7 @@ function setUp() {
     clickArea.on("pressup", handleUp);
     clickArea.on("pressmove", handleMove);
 
-    setNavBar();
+    // setNavBar();
 }
 
 function resize() {
@@ -156,6 +156,7 @@ function handleFileLoad(e) {
 }
 
 function handleDown(e) {
+    console.log('down');
     const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
     if (distance(mousePoint, shapeMask) > maskRadius) {
         isDragging = false;
@@ -169,12 +170,14 @@ function handleDown(e) {
 }
 
 function handleUp(e) {
+    console.log('up');
     if (!isDragging) return;
     onDrag(e);
     isDragging = false;
 }
 
 function handleMove(e) {
+    console.log('move');
     if (!isDragging) return;
     onDrag(e);
 }
