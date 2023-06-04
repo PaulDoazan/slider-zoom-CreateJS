@@ -1,4 +1,31 @@
-let stage, canvasW, canvasH, canvas, preload, sliderContainer, containerZoom, containerDezoom, shapeMask, maskRadius, clickArea, currentImage, maxZoom, isDragging, navbarContainer;
+// Details to improve :
+// --
+
+let stage,
+    canvasW,
+    canvasH,
+    canvas,
+    preload,
+    sliderContainer,
+    containerZoom,
+    containerDezoom,
+    shapeMask,
+    maskRadius,
+    clickArea,
+    imagesArray,
+    currentImage,
+    maxZoom,
+    isDragging,
+    navbarContainer,
+    slideIndex,
+    previousSlideIndex,
+    slideDirection,
+    arrowLeftShape,
+    arrowRightShape,
+    countText,
+    nbImageLoaded,
+    imagesCollection,
+    nbImages;
 
 const paddingTop = 50;
 const paddingBottom = 150;
@@ -20,6 +47,12 @@ function init() {
 }
 
 function setUp() {
+    slideDirection = 1
+    imagesArray = [];
+    imagesCollection = {};
+    nbImageLoaded = 0;
+    nbImages = 3
+    slideIndex = 0;
     maxZoom = 2;
     maskRadius = 200;
     let g = new createjs.Graphics();
@@ -34,15 +67,16 @@ function setUp() {
 
     manifest = [
         { src: "image1.jpg", id: "image1" },
+        { src: "image2.jpg", id: "image2" },
+        { src: "image3.jpg", id: "image3" },
     ];
+
 
     preload = new createjs.LoadQueue(true);
     preload.on("progress", handleProgress);
     preload.on("complete", handleComplete);
     preload.on("fileload", handleFileLoad);
     preload.loadManifest(manifest, true, "images/");
-
-    setNavBar();
 
     containerZoom = new createjs.Container();
     containerZoom.mouseEnabled = false;
@@ -65,13 +99,15 @@ function setUp() {
 
     sliderContainer.addChild(containerDezoom, containerZoom, clickArea);
     sliderContainer.set({ x: canvas.width / 2, y: canvas.height / 2 - paddingTop })
+
+    drawLines();
     stage.addChild(sliderContainer);
+    setNavBar();
+    updateArrows();
 
     clickArea.on("mousedown", handleDown);
     clickArea.on("pressup", handleUp);
     clickArea.on("pressmove", handleMove);
-
-
 }
 
 function resize() {
@@ -94,22 +130,27 @@ function setNavBar() {
     navbarContainer = new createjs.Container();
     stage.addChild(navbarContainer)
     drawArrows();
-    drawLines();
     drawBtnHome();
     drawPagesCount();
 }
 
 function drawPagesCount() {
-    let text = new createjs.Text("/ 52", "20px Arial", colorNavbar);
-    text.textAlign = "right"
-    text.x = canvas.width - paddingTop;
-    text.y = canvas.height - paddingBottom + 73;
-    navbarContainer.addChild(text);
+    countText = new createjs.Text(`0 / ${nbImages}`, "20px Arial", colorNavbar);
+    countText.textAlign = "right"
+    countText.x = canvas.width - paddingTop;
+    countText.y = canvas.height - paddingBottom + 73;
+    navbarContainer.addChild(countText);
 }
 
 function drawBtnHome() {
     let gr = new createjs.Graphics()
     let homeShape = new createjs.Shape(gr);
+    homeShape.set({
+        regX: 15,
+        regY: 15,
+        x: 15,
+        y: 15,
+    })
 
     let homeBtnContainer = new createjs.Container();
 
@@ -120,14 +161,50 @@ function drawBtnHome() {
         }
     }
 
+    gr.beginFill('rgba(201, 117, 91, 0.01)')
+    gr.drawRect(-10, -5, 150, 50)
+
     homeBtnContainer.x = paddingTop;
     homeBtnContainer.y = canvas.height - paddingBottom + 60;
+
+    homeBtnContainer.on('mousedown', (e) => {
+        e.currentTarget = homeShape;
+        onBtnDown(e)
+    })
+
+    homeBtnContainer.on('pressup', (e) => {
+        e.currentTarget = homeShape;
+        onBtnUp(e)
+    })
+    homeBtnContainer.on('click', onHomeClick)
 
     let text = new createjs.Text("ACCUEIL", "bold 20px Arial", colorNavbar);
     text.x = 45;
     text.y = 13;
     homeBtnContainer.addChild(homeShape, text)
     navbarContainer.addChild(homeBtnContainer);
+}
+
+function onBtnDown(e) {
+    e.currentTarget.set({
+        scaleX: 0.9,
+        scaleY: 0.9,
+    })
+}
+
+function onBtnUp(e) {
+    e.currentTarget.set({
+        scaleX: 1,
+        scaleY: 1,
+    })
+}
+
+function onHomeClick(e) {
+    onBtnUp(e)
+    slideIndex = 0;
+    updateArrows()
+    updateCountText()
+    updateCurrentImage()
 }
 
 function drawLines() {
@@ -144,7 +221,7 @@ function drawLines() {
     gr.moveTo(paddingTop, canvas.height - paddingBottom + 30 + thickness / 2)
     gr.lineTo(canvas.width - paddingTop, canvas.height - paddingBottom + 30 + thickness / 2)
 
-    navbarContainer.addChild(linesShape);
+    stage.addChild(linesShape);
 }
 
 function drawArrows() {
@@ -153,8 +230,8 @@ function drawArrows() {
     const thickness = 10;
 
     let gr = new createjs.Graphics()
-    let arrowLeftShape = new createjs.Shape(gr);
-    let arrowRightShape = new createjs.Shape(gr);
+    arrowLeftShape = new createjs.Shape(gr);
+    arrowRightShape = new createjs.Shape(gr);
 
     arrowLeftShape.rotation = 180
 
@@ -167,12 +244,22 @@ function drawArrows() {
     arrowLeftShape.set({
         regX: width / 2,
         regY: height / 2,
+        name: 'left'
     })
 
     arrowRightShape.set({
         regX: width / 2,
         regY: height / 2,
+        name: 'right'
     })
+
+    arrowLeftShape.on('mousedown', onBtnDown)
+    arrowLeftShape.on('pressup', onBtnUp)
+    arrowLeftShape.on('click', onArrowDown)
+
+    arrowRightShape.on('mousedown', onBtnDown)
+    arrowRightShape.on('pressup', onBtnUp)
+    arrowRightShape.on('click', onArrowDown)
 
     gr.setStrokeStyle(1);
     gr.beginFill("rgba(201, 117, 91, 0.01)");
@@ -203,7 +290,102 @@ function handleProgress(e) {
 }
 
 function handleComplete(e) {
+    currentImage = imagesCollection[`image${1}`];
+    createjs.Ticker.on('tick', () => {
+        updateCurrentImage()
+    }, null, true)
+}
 
+function onArrowDown(e) {
+    createjs.Tween.removeAllTweens();
+    // FIX THAT TWEEN WHEN USER CLICKS FAST (previous pop up suddenly !!!)
+    previousSlideIndex = slideIndex;
+    if (e.currentTarget.name === 'left') {
+        slideDirection = -1
+        slideIndex += slideDirection
+        if (slideIndex <= 0) {
+            previousSlideIndex = 0
+            slideIndex = 0
+        }
+    } else {
+        slideDirection = 1
+        slideIndex += slideDirection
+        if (slideIndex >= nbImages) {
+            slideIndex = nbImages
+        }
+    }
+
+    updateArrows()
+    updateCountText()
+    updateCurrentImage()
+}
+
+function updateArrows() {
+    arrowLeftShape.visible = arrowRightShape.visible = true;
+
+    if (slideIndex <= 0) {
+        arrowLeftShape.visible = false;
+    }
+
+    if (slideIndex >= nbImages) {
+        arrowRightShape.visible = false;
+    }
+}
+
+function updateCurrentImage() {
+    const tweenDuration = 1000
+    const easeType = createjs.Ease.quintInOut;
+    currentImage = imagesCollection[`image${slideIndex}`];
+    for (let i = 1; i <= nbImages; i++) {
+        const element = imagesCollection[`image${i}`];
+        element.bmpDezoom.alpha = 0;
+        element.bmpZoom.alpha = 0;
+    }
+
+    if (!currentImage) return
+
+    if (previousSlideIndex !== 0) {
+        let previousImage = imagesCollection[`image${previousSlideIndex}`];
+        previousImage.bmpDezoom.alpha = 1;
+        previousImage.bmpZoom.alpha = 1;
+
+        createjs.Tween.get(previousImage.bmpDezoom).to({
+            alpha: 0,
+            // x: previousImage.width * previousImage.bmpDezoom.scaleX * -slideDirection
+        }, tweenDuration, easeType).call(() => {
+            if (!currentImage) return
+            createjs.Tween.get(currentImage.bmpDezoom).to({
+                alpha: 1,
+                // x: currentImage.width * currentImage.bmpDezoom.scaleX * -slideDirection
+            }, tweenDuration, easeType)
+        })
+
+        createjs.Tween.get(previousImage.bmpZoom).to({
+            alpha: 0,
+            // x: previousImage.width * previousImage.bmpZoom.scaleX * -slideDirection
+        }, tweenDuration / 2, easeType).wait(tweenDuration / 2).call(() => {
+            if (!currentImage) return
+            createjs.Tween.get(currentImage.bmpZoom).to({
+                alpha: 1,
+                // x: currentImage.width * currentImage.bmpZoom.scaleX * -slideDirection
+            }, tweenDuration * 2, easeType, createjs.Ease.quintInOut)
+        })
+    } else {
+        if (!currentImage) return
+        createjs.Tween.get(currentImage.bmpZoom).to({
+            alpha: 1,
+            // x: currentImage.width * currentImage.bmpZoom.scaleX * -slideDirection
+        }, tweenDuration * 2, easeType)
+
+        createjs.Tween.get(currentImage.bmpDezoom).to({
+            alpha: 1,
+            // x: currentImage.width * currentImage.bmpDezoom.scaleX * -slideDirection
+        }, tweenDuration, easeType)
+    }
+}
+
+function updateCountText() {
+    countText.text = `${slideIndex} / ${nbImages}`
 }
 
 function handleFileLoad(e) {
@@ -215,22 +397,31 @@ function handleFileLoad(e) {
         scaleX: image.minDezoom,
         scaleY: image.minDezoom,
         regX: image.width / 2, regY: image.height / 2,
+        alpha: 0.01
     });
 
     const bmp2 = new createjs.Bitmap(image).set({
         scaleX: image.minDezoom * maxZoom,
         scaleY: image.minDezoom * maxZoom,
         regX: image.width / 2, regY: image.height / 2,
+        alpha: 0.01
     });
+
+    createjs.Ticker.on('tick', () => {
+        bmp.alpha = 0
+        bmp2.alpha = 0
+    }, null, true)
 
     containerDezoom.addChild(bmp);
     containerZoom.addChild(bmp2);
 
-    currentImage = image
+    image.name = e.item.id
+    image.bmpDezoom = bmp;
+    image.bmpZoom = bmp2;
+    imagesCollection[`${e.item.id}`] = image;
 }
 
 function handleDown(e) {
-    console.log('down');
     const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
     if (distance(mousePoint, shapeMask) > maskRadius) {
         isDragging = false;
@@ -244,14 +435,12 @@ function handleDown(e) {
 }
 
 function handleUp(e) {
-    console.log('up');
     if (!isDragging) return;
     onDrag(e);
     isDragging = false;
 }
 
 function handleMove(e) {
-    console.log('move');
     if (!isDragging) return;
     onDrag(e);
 }
