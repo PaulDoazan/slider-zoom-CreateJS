@@ -37,9 +37,10 @@ body {
 }
 
 .home-title {
-  margin-top: 200px;
+  margin-top: 300px;
   text-align: center;
   color: white;
+  font-weight: 500;
   font-size: 46px;
   font-family: 'montecarloregular';
 }

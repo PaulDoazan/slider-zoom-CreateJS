@@ -32,6 +32,7 @@ let stage,
     linesShape,
     countBetweenClick,
     crossPictoShape,
+    pictoContainer,
     text1;
 
 const paddingTop = 50;
@@ -63,7 +64,7 @@ function setUp() {
     indexImgToLoad = 1;
     slideIndex = 0;
     maxZoom = 2;
-    maskRadius = 230;
+    maskRadius = 200;
     let g = new createjs.Graphics();
     g.setStrokeStyle(1);
     g.beginStroke("#c9755b");
@@ -89,7 +90,7 @@ function setUp() {
         { src: "image7.jpg", id: "image7" },
         { src: "image8.jpg", id: "image8" },
         { src: "image9.jpg", id: "image9" },
-        { src: "image10.jpg", id: "image10" },
+        // { src: "image10.jpg", id: "image10" },
         // { src: "image11.jpg", id: "image11" },
         // { src: "image12.jpg", id: "image12" },
         // { src: "image13.jpg", id: "image13" },
@@ -146,11 +147,29 @@ function setUp() {
     gr.drawCircle(0, 0, maskRadius);
     shapeMask = new createjs.Shape(gr)
 
-    const grCircle = new createjs.Graphics()
-    grCircle.setStrokeStyle(15);
-    grCircle.beginLinearGradientStroke(["#aaa", "#333"], [0, 1], -maskRadius, -maskRadius, maskRadius, maskRadius)
-    grCircle.drawCircle(0, 0, maskRadius);
-    maskCircle = new createjs.Shape(grCircle)
+    // const grCircle = new createjs.Graphics()
+    // grCircle.setStrokeStyle(15);
+    // grCircle.beginLinearGradientStroke(["#aaa", "#333"], [0, 1], -maskRadius, -maskRadius, maskRadius, maskRadius)
+    // grCircle.drawCircle(0, 0, maskRadius);
+    const glassBmp = new createjs.Bitmap("images/glass.png");
+    glassBmp.set({
+        x: -300,
+        y: -85
+    })
+    glassContainer = new createjs.Container()
+    glassContainer.set({
+        scaleX: 0.47,
+        scaleY: 0.47,
+        regX: 490,
+        regY: 490,
+    })
+
+    const grGlass = new createjs.Graphics()
+    grGlass.beginFill("rgba(255,255,255,0.01)");
+    grGlass.drawCircle(495, 495, maskRadius * (1 / 0.47));
+    const shapeGlass = new createjs.Shape(grGlass)
+
+    glassContainer.addChild(shapeGlass, glassBmp)
 
     shapeMask.set({
         offsetX: 0,
@@ -160,7 +179,8 @@ function setUp() {
 
     containerDezoom = new createjs.Container();
     sliderContainer = new createjs.Container();
-    sliderContainer.visible = false;
+    glassContainer.visible = false
+    // sliderContainer.visible = false;
 
     const graphics = new createjs.Graphics()
     graphics.beginFill("rgba(255, 255, 255, 0.01)");
@@ -168,7 +188,7 @@ function setUp() {
 
     clickArea = new createjs.Shape(graphics);
 
-    sliderContainer.addChild(containerDezoom, containerZoom, clickArea, maskCircle);
+    sliderContainer.addChild(containerDezoom, containerZoom, clickArea, glassContainer);
     sliderContainer.set({ x: canvas.width / 2, y: canvas.height / 2 - paddingTop })
 
     drawLines();
@@ -178,9 +198,12 @@ function setUp() {
 
     arrowRightShape.alpha = 0;
 
-    clickArea.on("mousedown", handleDown);
-    clickArea.on("pressup", handleUp);
-    clickArea.on("pressmove", handleMove);
+    // clickArea.on("mousedown", handleDown);
+    // clickArea.on("pressup", handleUp);
+    // clickArea.on("pressmove", handleMove);
+    glassContainer.on("mousedown", handleGlassDown);
+    glassContainer.on("pressup", handleGlassUp);
+    glassContainer.on("pressmove", handleGlassMove);
 }
 
 function resize() {
@@ -210,7 +233,7 @@ function setNavBar() {
 }
 
 function drawLent() {
-    const pictoContainer = new createjs.Container()
+    pictoContainer = new createjs.Container()
     const picto = new createjs.Bitmap("images/picto.png");
     pictoContainer.set({
         regX: 50,
@@ -223,7 +246,7 @@ function drawLent() {
 
     const g = new createjs.Graphics();
     crossPictoShape = new createjs.Shape(g)
-    crossPictoShape.visible = false
+    pictoContainer.visible = false
 
     const gb = new createjs.Graphics();
     const bg = new createjs.Shape(gb)
@@ -232,7 +255,7 @@ function drawLent() {
     // gb.beginFill('black')
     gb.drawCircle(50, 50, 80)
 
-    g.setStrokeStyle(10, 'round')
+    g.setStrokeStyle(8, 'round')
     g.beginStroke("white")
 
     g.moveTo(18, -2)
@@ -245,10 +268,10 @@ function drawLent() {
         crossPictoShape.visible = !crossPictoShape.visible
         if (crossPictoShape.visible) {
             if (currentImage) currentImage.bmpZoom.visible = false
-            maskCircle.visible = false
+            glassContainer.visible = false
         } else {
             if (currentImage) currentImage.bmpZoom.visible = true
-            maskCircle.visible = true
+            glassContainer.visible = true
         }
     })
 }
@@ -257,7 +280,7 @@ function drawPagesCount() {
     countText = new createjs.Text(`0 / ${manifest.length}`, "20px Arial", colorNavbar);
     countText.textAlign = "right"
     countText.x = canvas.width - paddingTop;
-    countText.y = canvas.height - paddingBottom + 73;
+    countText.y = canvas.height - paddingBottom + 70;
     navbarContainer.addChild(countText);
 }
 
@@ -299,7 +322,7 @@ function drawBtnHome() {
 
     let text = new createjs.Text("ACCUEIL", "bold 20px Arial", colorNavbar);
     text.x = 45;
-    text.y = 13;
+    text.y = 10;
     homeBtnContainer.addChild(homeShape, text)
     navbarContainer.addChild(homeBtnContainer);
 }
@@ -454,8 +477,8 @@ function updateArrows() {
 }
 
 function updateCurrentImage() {
-    const tweenDuration = 400
-    const easeType = createjs.Ease.quintInOut;
+    const tweenDuration = 300
+    const easeType = createjs.Ease.quintOut;
     const deltaTweening = 1
     currentImage = imagesCollection[`image${slideIndex}`];
 
@@ -464,9 +487,11 @@ function updateCurrentImage() {
     if (slideIndex === 0) {
         titleContainer.style.display = 'block'
         sliderContainer.visible = false;
+        pictoContainer.visible = false;
     } else {
         titleContainer.style.display = 'none'
         sliderContainer.visible = true;
+        pictoContainer.visible = true;
     }
 
     for (let i = 1; i <= manifest.length; i++) {
@@ -512,7 +537,7 @@ function updateCurrentImage() {
             createjs.Tween.get(currentImage.bmpZoom).to({
                 alpha: 1,
                 // x: currentImage.width * currentImage.bmpZoom.scaleX * -slideDirection
-            }, tweenDuration * deltaTweening, easeType, createjs.Ease.quintInOut)
+            }, tweenDuration * deltaTweening, easeType, createjs.Ease.quintOut)
         })
     } else {
         if (!currentImage) return
@@ -590,7 +615,7 @@ function handleComplete() {
         () => {
             createjs.Tween.get(linesShape).to({
                 y: 0
-            }, 1500, createjs.Ease.quintInOut).call(() => {
+            }, 1500, createjs.Ease.quintOut).call(() => {
                 createjs.Tween.get(arrowRightShape).to({
                     alpha: 1
                 }, 1000)
@@ -626,21 +651,30 @@ function handleMove(e) {
     if (isDragging) onDrag(e);
 }
 
-function onDrag(e) {
-    shapeMask.set({
-        x: stage.mouseX - canvas.width / 2 - shapeMask.offsetX,
-        y: stage.mouseY - canvas.height / 2 - shapeMask.offsetY,
+function handleGlassDown(e) {
+    e.currentTarget.offsetX = (stage.mouseX - canvas.width / 2) - e.currentTarget.x
+    e.currentTarget.offsetY = (stage.mouseY - canvas.height / 2) - e.currentTarget.y
+}
+
+function handleGlassUp(e) {
+
+}
+
+function handleGlassMove(e) {
+    e.currentTarget.set({
+        x: stage.mouseX - canvas.width / 2 - e.currentTarget.offsetX,
+        y: stage.mouseY - canvas.height / 2 - e.currentTarget.offsetY,
     })
 
-    if (shapeMask.x < -(currentImage.width / 2) * currentImage.minDezoom) shapeMask.x = -(currentImage.width / 2) * currentImage.minDezoom
-    if (shapeMask.x > (currentImage.width / 2) * currentImage.minDezoom) shapeMask.x = (currentImage.width / 2) * currentImage.minDezoom
+    if (e.currentTarget.x < -(currentImage.width / 2) * currentImage.minDezoom) e.currentTarget.x = -(currentImage.width / 2) * currentImage.minDezoom
+    if (e.currentTarget.x > (currentImage.width / 2) * currentImage.minDezoom) e.currentTarget.x = (currentImage.width / 2) * currentImage.minDezoom
 
-    if (shapeMask.y < -(currentImage.height / 2) * currentImage.minDezoom) shapeMask.y = -(currentImage.height / 2) * currentImage.minDezoom
-    if (shapeMask.y > (currentImage.height / 2) * currentImage.minDezoom) shapeMask.y = (currentImage.height / 2) * currentImage.minDezoom
+    if (e.currentTarget.y < -(currentImage.height / 2) * currentImage.minDezoom) e.currentTarget.y = -(currentImage.height / 2) * currentImage.minDezoom
+    if (e.currentTarget.y > (currentImage.height / 2) * currentImage.minDezoom) e.currentTarget.y = (currentImage.height / 2) * currentImage.minDezoom
 
-    maskCircle.set({
-        x: shapeMask.x,
-        y: shapeMask.y,
+    shapeMask.set({
+        x: e.currentTarget.x,
+        y: e.currentTarget.y,
     })
     const ratioX = (shapeMask.x - containerDezoom.x) / ((currentImage.width / 2) * currentImage.minDezoom);
     const ratioY = (shapeMask.y - containerDezoom.y) / ((currentImage.height / 2) * currentImage.minDezoom);
@@ -651,6 +685,32 @@ function onDrag(e) {
     containerZoom.x = containerDezoom.x - dx
     containerZoom.y = containerDezoom.y - dy
 }
+
+// function onDrag(e) {
+//     shapeMask.set({
+//         x: stage.mouseX - canvas.width / 2 - shapeMask.offsetX,
+//         y: stage.mouseY - canvas.height / 2 - shapeMask.offsetY,
+//     })
+
+//     if (shapeMask.x < -(currentImage.width / 2) * currentImage.minDezoom) shapeMask.x = -(currentImage.width / 2) * currentImage.minDezoom
+//     if (shapeMask.x > (currentImage.width / 2) * currentImage.minDezoom) shapeMask.x = (currentImage.width / 2) * currentImage.minDezoom
+
+//     if (shapeMask.y < -(currentImage.height / 2) * currentImage.minDezoom) shapeMask.y = -(currentImage.height / 2) * currentImage.minDezoom
+//     if (shapeMask.y > (currentImage.height / 2) * currentImage.minDezoom) shapeMask.y = (currentImage.height / 2) * currentImage.minDezoom
+
+//     glassContainer.set({
+//         x: shapeMask.x,
+//         y: shapeMask.y,
+//     })
+//     const ratioX = (shapeMask.x - containerDezoom.x) / ((currentImage.width / 2) * currentImage.minDezoom);
+//     const ratioY = (shapeMask.y - containerDezoom.y) / ((currentImage.height / 2) * currentImage.minDezoom);
+
+//     const dx = ((currentImage.width / 2) * currentImage.minDezoom * (maxZoom - 1)) * ratioX;
+//     const dy = ((currentImage.height / 2) * currentImage.minDezoom * (maxZoom - 1)) * ratioY;
+
+//     containerZoom.x = containerDezoom.x - dx
+//     containerZoom.y = containerDezoom.y - dy
+// }
 
 function distance(pointA, pointB) {
     return Math.hypot(pointB.x - pointA.x, pointB.y - pointA.y);
