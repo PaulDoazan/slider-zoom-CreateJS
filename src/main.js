@@ -459,6 +459,8 @@ function updateCurrentImage() {
     const deltaTweening = 1
     currentImage = imagesCollection[`image${slideIndex}`];
 
+    if (currentImage) currentImage.bmpZoom.visible = !crossPictoShape.visible
+
     if (slideIndex === 0) {
         titleContainer.style.display = 'block'
         sliderContainer.visible = false;
