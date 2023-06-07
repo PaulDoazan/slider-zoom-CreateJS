@@ -1,5 +1,5 @@
 // Details to improve :
-// -- limit drag&drop
+// -- correct lent if out of image, happens from wide image to narrow 
 const titleContainer = document.querySelector('.title-container');
 
 let stage,
@@ -29,6 +29,9 @@ let stage,
     imagesCollection,
     loaderBackground,
     clickAllowed,
+    linesShape,
+    countBetweenClick,
+    crossPictoShape,
     text1;
 
 const paddingTop = 50;
@@ -41,6 +44,7 @@ function init() {
     createjs.Touch.enable(stage);
     resize();
 
+    createjs.Ticker.timingMode = createjs.Ticker.RAF;
     createjs.Ticker.addEventListener("tick", handleTick);
 
     function handleTick(event) {
@@ -51,6 +55,7 @@ function init() {
 }
 
 function setUp() {
+    countBetweenClick = 0;
     previousSlideIndex = 0
     slideDirection = 1
     imagesArray = [];
@@ -58,7 +63,7 @@ function setUp() {
     indexImgToLoad = 1;
     slideIndex = 0;
     maxZoom = 2;
-    maskRadius = 200;
+    maskRadius = 230;
     let g = new createjs.Graphics();
     g.setStrokeStyle(1);
     g.beginStroke("#c9755b");
@@ -70,7 +75,7 @@ function setUp() {
     textLoader = new createjs.Text(`Loading 0 %`, "40px Arial", colorNavbar);
     textLoader.textAlign = "center"
     textLoader.x = canvas.width / 2;
-    textLoader.y = canvas.height * 0.75;
+    textLoader.y = canvas.height * 0.8;
 
     stage.addChild(sh, textLoader)
 
@@ -128,7 +133,10 @@ function setUp() {
     preload.on("progress", handleProgress);
     preload.on("fileload", handleFileLoad);
     preload.on("complete", handleComplete);
-    preload.loadManifest(manifest, true, "images/");
+
+    createjs.Ticker.on('tick', () => {
+        preload.loadManifest(manifest, true, "images/");
+    }, null, true)
 
     containerZoom = new createjs.Container();
     containerZoom.mouseEnabled = false;
@@ -138,6 +146,12 @@ function setUp() {
     gr.drawCircle(0, 0, maskRadius);
     shapeMask = new createjs.Shape(gr)
 
+    const grCircle = new createjs.Graphics()
+    grCircle.setStrokeStyle(15);
+    grCircle.beginLinearGradientStroke(["#aaa", "#333"], [0, 1], -maskRadius, -maskRadius, maskRadius, maskRadius)
+    grCircle.drawCircle(0, 0, maskRadius);
+    maskCircle = new createjs.Shape(grCircle)
+
     shapeMask.set({
         offsetX: 0,
         offsetY: 0
@@ -146,6 +160,7 @@ function setUp() {
 
     containerDezoom = new createjs.Container();
     sliderContainer = new createjs.Container();
+    sliderContainer.visible = false;
 
     const graphics = new createjs.Graphics()
     graphics.beginFill("rgba(255, 255, 255, 0.01)");
@@ -153,13 +168,15 @@ function setUp() {
 
     clickArea = new createjs.Shape(graphics);
 
-    sliderContainer.addChild(containerDezoom, containerZoom, clickArea);
+    sliderContainer.addChild(containerDezoom, containerZoom, clickArea, maskCircle);
     sliderContainer.set({ x: canvas.width / 2, y: canvas.height / 2 - paddingTop })
 
     drawLines();
     stage.addChild(sliderContainer);
     setNavBar();
     updateArrows();
+
+    arrowRightShape.alpha = 0;
 
     clickArea.on("mousedown", handleDown);
     clickArea.on("pressup", handleUp);
@@ -184,10 +201,56 @@ function resize() {
 
 function setNavBar() {
     navbarContainer = new createjs.Container();
+    navbarContainer.alpha = 0;
     stage.addChild(navbarContainer)
+    drawLent()
     drawArrows();
     drawBtnHome();
     drawPagesCount();
+}
+
+function drawLent() {
+    const pictoContainer = new createjs.Container()
+    const picto = new createjs.Bitmap("images/picto.png");
+    pictoContainer.set({
+        regX: 50,
+        regY: 50,
+        scaleX: 0.7,
+        scaleY: 0.7,
+    })
+    pictoContainer.x = 80
+    pictoContainer.y = 100
+
+    const g = new createjs.Graphics();
+    crossPictoShape = new createjs.Shape(g)
+    crossPictoShape.visible = false
+
+    const gb = new createjs.Graphics();
+    const bg = new createjs.Shape(gb)
+
+    gb.beginFill('rgba(201, 117, 91, 0.01)')
+    // gb.beginFill('black')
+    gb.drawCircle(50, 50, 80)
+
+    g.setStrokeStyle(10, 'round')
+    g.beginStroke("white")
+
+    g.moveTo(18, -2)
+    g.lineTo(98, 78)
+
+    pictoContainer.addChild(bg, picto, crossPictoShape);
+    navbarContainer.addChild(pictoContainer);
+
+    pictoContainer.on('mousedown', () => {
+        crossPictoShape.visible = !crossPictoShape.visible
+        if (crossPictoShape.visible) {
+            if (currentImage) currentImage.bmpZoom.visible = false
+            maskCircle.visible = false
+        } else {
+            if (currentImage) currentImage.bmpZoom.visible = true
+            maskCircle.visible = true
+        }
+    })
 }
 
 function drawPagesCount() {
@@ -243,6 +306,7 @@ function drawBtnHome() {
 
 function onBtnDown(e) {
     if (!clickAllowed) return
+
     e.currentTarget.set({
         scaleX: 0.9,
         scaleY: 0.9,
@@ -251,6 +315,7 @@ function onBtnDown(e) {
 
 function onBtnUp(e) {
     if (!clickAllowed) return
+
     e.currentTarget.set({
         scaleX: 1,
         scaleY: 1,
@@ -269,7 +334,9 @@ function onHomeClick(e) {
 function drawLines() {
     const thickness = 5
     let gr = new createjs.Graphics()
-    let linesShape = new createjs.Shape(gr);
+    linesShape = new createjs.Shape(gr);
+
+    linesShape.y = -250;
 
     gr.setStrokeStyle(thickness)
     gr.beginStroke(colorNavbar);
@@ -375,22 +442,31 @@ function onArrowDown(e) {
 }
 
 function updateArrows() {
-    arrowLeftShape.visible = arrowRightShape.visible = true;
+    arrowLeftShape.alpha = arrowRightShape.alpha = 1;
 
     if (slideIndex <= 0) {
-        arrowLeftShape.visible = false;
+        arrowLeftShape.alpha = 0;
     }
 
     if (slideIndex >= manifest.length) {
-        arrowRightShape.visible = false;
+        arrowRightShape.alpha = 0;
     }
 }
 
 function updateCurrentImage() {
-    const tweenDuration = 1000
+    const tweenDuration = 400
     const easeType = createjs.Ease.quintInOut;
     const deltaTweening = 1
     currentImage = imagesCollection[`image${slideIndex}`];
+
+    if (slideIndex === 0) {
+        titleContainer.style.display = 'block'
+        sliderContainer.visible = false;
+    } else {
+        titleContainer.style.display = 'none'
+        sliderContainer.visible = true;
+    }
+
     for (let i = 1; i <= manifest.length; i++) {
         const element = imagesCollection[`image${i}`];
         element.bmpDezoom.alpha = 0;
@@ -399,6 +475,19 @@ function updateCurrentImage() {
 
     if (previousSlideIndex !== 0) {
         let previousImage = imagesCollection[`image${previousSlideIndex}`];
+
+        // if (previousImage.bmpZoom.alpha < 1) {
+        //     createjs.Tween.removeAllTweens();
+        //     for (let i = 1; i <= manifest.length; i++) {
+        //         const element = imagesCollection[`image${i}`];
+        //         element.bmpDezoom.alpha = 0;
+        //         element.bmpZoom.alpha = 0;
+        //     }
+        //     currentImage.bmpDezoom.alpha = 1;
+        //     currentImage.bmpZoom.alpha = 1;
+        //     return;
+        // }
+
         previousImage.bmpDezoom.alpha = 1;
         previousImage.bmpZoom.alpha = 1;
 
@@ -425,6 +514,7 @@ function updateCurrentImage() {
         })
     } else {
         if (!currentImage) return
+
         createjs.Tween.get(currentImage.bmpZoom).to({
             alpha: 1,
             // x: currentImage.width * currentImage.bmpZoom.scaleX * -slideDirection
@@ -443,8 +533,6 @@ function updateCountText() {
 
 function handleFileLoad(e) {
     const image = e.result;
-    // let minSizes = image.width < image.height ? { imgSize: image.width, canvasSize: 1920 } : { imgSize: image.height, canvasSize: 1080 };
-    // image.minDezoom = (minSizes.canvasSize - (paddingTop + paddingBottom)) / minSizes.imgSize;
     image.minDezoom = (canvas.height - (paddingTop + paddingBottom)) / image.height;
 
     const bmp = new createjs.Bitmap(image).set({
@@ -489,45 +577,51 @@ function handleFileLoad(e) {
 }
 
 function handleProgress(e) {
-    console.log(e.loaded);
     textLoader.text = `Loading ${Math.round(e.loaded * 100)} %`;
     //     preload.loadFile({ id: `image${indexImgToLoad}`, src: `images/image${indexImgToLoad}.jpg` });
 }
 
 function handleComplete() {
-    clickAllowed = true
-    currentImage = imagesCollection[`image${1}`];
+    createjs.Tween.get(textLoader).to({
+        alpha: 0
+    }, 1500).call(
+        () => {
+            createjs.Tween.get(linesShape).to({
+                y: 0
+            }, 1500, createjs.Ease.quintInOut).call(() => {
+                createjs.Tween.get(arrowRightShape).to({
+                    alpha: 1
+                }, 1000)
+                createjs.Tween.get(navbarContainer).to({
+                    alpha: 1
+                }, 1000)
+                clickAllowed = true
+            })
+        }
+    )
 }
 
 function handleDown(e) {
-    if (!clickAllowed) return
-    // e.preventDefault();
-    // console.log("down");
-    // text1.text = e.type
-    const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
+    if (!clickAllowed || slideIndex === 0) return
+    const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - (canvas.height / 2 - paddingTop) }
     shapeMask.offsetX = (stage.mouseX - canvas.width / 2) - shapeMask.x
     shapeMask.offsetY = (stage.mouseY - canvas.height / 2) - shapeMask.y
-    if (distance(mousePoint, shapeMask) > maskRadius) return;
+    const dist = distance(mousePoint, shapeMask);
+    if (dist < maskRadius) {
+        isDragging = true;
+    };
 
     onDrag(e);
 }
 
 function handleUp(e) {
-    if (!clickAllowed) return
-    const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
-    if (distance(mousePoint, shapeMask) > maskRadius) return;
-    onDrag(e);
+    if (!clickAllowed || slideIndex === 0) return
+    isDragging = false;
 }
 
 function handleMove(e) {
-    if (!clickAllowed) return
-    const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
-    if (distance(mousePoint, shapeMask) > maskRadius) return;
-    // e.preventDefault();
-    // console.log("move");
-    // text1.text = e.type
-    // if (!isDragging) return;
-    onDrag(e);
+    if (!clickAllowed || slideIndex === 0) return
+    if (isDragging) onDrag(e);
 }
 
 function onDrag(e) {
@@ -542,6 +636,10 @@ function onDrag(e) {
     if (shapeMask.y < -(currentImage.height / 2) * currentImage.minDezoom) shapeMask.y = -(currentImage.height / 2) * currentImage.minDezoom
     if (shapeMask.y > (currentImage.height / 2) * currentImage.minDezoom) shapeMask.y = (currentImage.height / 2) * currentImage.minDezoom
 
+    maskCircle.set({
+        x: shapeMask.x,
+        y: shapeMask.y,
+    })
     const ratioX = (shapeMask.x - containerDezoom.x) / ((currentImage.width / 2) * currentImage.minDezoom);
     const ratioY = (shapeMask.y - containerDezoom.y) / ((currentImage.height / 2) * currentImage.minDezoom);
 
