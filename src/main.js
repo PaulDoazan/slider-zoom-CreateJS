@@ -1,5 +1,6 @@
 // Details to improve :
 // -- limit drag&drop
+const titleContainer = document.querySelector('.title-container');
 
 let stage,
     canvasW,
@@ -13,6 +14,7 @@ let stage,
     maskRadius,
     clickArea,
     imagesArray,
+    manifest,
     currentImage,
     maxZoom,
     isDragging,
@@ -23,9 +25,10 @@ let stage,
     arrowLeftShape,
     arrowRightShape,
     countText,
-    nbImageLoaded,
+    indexImgToLoad,
     imagesCollection,
-    nbImages,
+    loaderBackground,
+    clickAllowed,
     text1;
 
 const paddingTop = 50;
@@ -52,8 +55,7 @@ function setUp() {
     slideDirection = 1
     imagesArray = [];
     imagesCollection = {};
-    nbImageLoaded = 0;
-    nbImages = 3
+    indexImgToLoad = 1;
     slideIndex = 0;
     maxZoom = 2;
     maskRadius = 200;
@@ -65,23 +67,67 @@ function setUp() {
 
     let sh = new createjs.Shape(g);
 
-    text1 = new createjs.Text(`TEST`, "20px Arial", colorNavbar);
-    text1.x = canvas.width - 100;
-    text1.y = canvas.height / 2;
+    textLoader = new createjs.Text(`Loading 0 %`, "40px Arial", colorNavbar);
+    textLoader.textAlign = "center"
+    textLoader.x = canvas.width / 2;
+    textLoader.y = canvas.height * 0.75;
 
-    stage.addChild(sh)
+    stage.addChild(sh, textLoader)
 
     manifest = [
         { src: "image1.jpg", id: "image1" },
         { src: "image2.jpg", id: "image2" },
         { src: "image3.jpg", id: "image3" },
+        { src: "image4.jpg", id: "image4" },
+        { src: "image5.jpg", id: "image5" },
+        { src: "image6.jpg", id: "image6" },
+        { src: "image7.jpg", id: "image7" },
+        { src: "image8.jpg", id: "image8" },
+        { src: "image9.jpg", id: "image9" },
+        { src: "image10.jpg", id: "image10" },
+        // { src: "image11.jpg", id: "image11" },
+        // { src: "image12.jpg", id: "image12" },
+        // { src: "image13.jpg", id: "image13" },
+        // { src: "image14.jpg", id: "image14" },
+        // { src: "image15.jpg", id: "image15" },
+        // { src: "image16.jpg", id: "image16" },
+        // { src: "image17.jpg", id: "image17" },
+        // { src: "image18.jpg", id: "image18" },
+        // { src: "image19.jpg", id: "image19" },
+        // { src: "image20.jpg", id: "image20" },
+        // { src: "image21.jpg", id: "image21" },
+        // { src: "image22.jpg", id: "image22" },
+        // { src: "image23.jpg", id: "image23" },
+        // { src: "image24.jpg", id: "image24" },
+        // { src: "image25.jpg", id: "image25" },
+        // { src: "image26.jpg", id: "image26" },
+        // { src: "image27.jpg", id: "image27" },
+        // { src: "image28.jpg", id: "image28" },
+        // { src: "image29.jpg", id: "image29" },
+        // { src: "image30.jpg", id: "image30" },
+        // { src: "image31.jpg", id: "image31" },
+        // { src: "image32.jpg", id: "image32" },
+        // { src: "image33.jpg", id: "image33" },
+        // { src: "image34.jpg", id: "image34" },
+        // { src: "image35.jpg", id: "image35" },
+        // { src: "image36.jpg", id: "image36" },
+        // { src: "image37.jpg", id: "image37" },
+        // { src: "image38.jpg", id: "image38" },
+        // { src: "image39.jpg", id: "image39" },
+        // { src: "image40.jpg", id: "image40" },
+        // { src: "image41.jpg", id: "image41" },
+        // { src: "image42.jpg", id: "image42" },
+        // { src: "image43.jpg", id: "image43" },
+        // { src: "image44.jpg", id: "image44" },
     ];
 
 
     preload = new createjs.LoadQueue(true);
+    // preload.on("fileload", handleFileLoad);
+    // preload.loadFile({ id: `image${1}`, src: `images/image${1}.jpg` });
     preload.on("progress", handleProgress);
-    preload.on("complete", handleComplete);
     preload.on("fileload", handleFileLoad);
+    preload.on("complete", handleComplete);
     preload.loadManifest(manifest, true, "images/");
 
     containerZoom = new createjs.Container();
@@ -92,6 +138,10 @@ function setUp() {
     gr.drawCircle(0, 0, maskRadius);
     shapeMask = new createjs.Shape(gr)
 
+    shapeMask.set({
+        offsetX: 0,
+        offsetY: 0
+    })
     containerZoom.mask = shapeMask;
 
     containerDezoom = new createjs.Container();
@@ -113,9 +163,6 @@ function setUp() {
 
     clickArea.on("mousedown", handleDown);
     clickArea.on("pressup", handleUp);
-    // canvas.addEventListener("touchstart", handleDown)
-    // canvas.addEventListener("touchend", handleUp)
-    // canvas.addEventListener("touchmove", handleMove)
     clickArea.on("pressmove", handleMove);
 }
 
@@ -144,7 +191,7 @@ function setNavBar() {
 }
 
 function drawPagesCount() {
-    countText = new createjs.Text(`0 / ${nbImages}`, "20px Arial", colorNavbar);
+    countText = new createjs.Text(`0 / ${manifest.length}`, "20px Arial", colorNavbar);
     countText.textAlign = "right"
     countText.x = canvas.width - paddingTop;
     countText.y = canvas.height - paddingBottom + 73;
@@ -195,6 +242,7 @@ function drawBtnHome() {
 }
 
 function onBtnDown(e) {
+    if (!clickAllowed) return
     e.currentTarget.set({
         scaleX: 0.9,
         scaleY: 0.9,
@@ -202,6 +250,7 @@ function onBtnDown(e) {
 }
 
 function onBtnUp(e) {
+    if (!clickAllowed) return
     e.currentTarget.set({
         scaleX: 1,
         scaleY: 1,
@@ -209,6 +258,7 @@ function onBtnUp(e) {
 }
 
 function onHomeClick(e) {
+    if (!clickAllowed) return
     onBtnUp(e)
     slideIndex = 0;
     updateArrows()
@@ -294,18 +344,8 @@ window.addEventListener('resize', (e) => {
     resize();
 })
 
-function handleProgress(e) {
-
-}
-
-function handleComplete(e) {
-    currentImage = imagesCollection[`image${1}`];
-    createjs.Ticker.on('tick', () => {
-        updateCurrentImage()
-    }, null, true)
-}
-
 function onArrowDown(e) {
+    if (!clickAllowed) return
     createjs.Tween.removeAllTweens();
     // FIX THAT TWEEN WHEN USER CLICKS FAST (previous pop up suddenly !!!)
     previousSlideIndex = slideIndex;
@@ -318,9 +358,15 @@ function onArrowDown(e) {
     } else {
         slideDirection = 1
         slideIndex += slideDirection
-        if (slideIndex >= nbImages) {
-            slideIndex = nbImages
+        if (slideIndex >= manifest.length) {
+            slideIndex = manifest.length
         }
+    }
+
+    if (slideIndex === 0) {
+        titleContainer.style.display = 'block';
+    } else {
+        titleContainer.style.display = 'none';
     }
 
     updateArrows()
@@ -335,7 +381,7 @@ function updateArrows() {
         arrowLeftShape.visible = false;
     }
 
-    if (slideIndex >= nbImages) {
+    if (slideIndex >= manifest.length) {
         arrowRightShape.visible = false;
     }
 }
@@ -345,7 +391,7 @@ function updateCurrentImage() {
     const easeType = createjs.Ease.quintInOut;
     const deltaTweening = 1
     currentImage = imagesCollection[`image${slideIndex}`];
-    for (let i = 1; i <= nbImages; i++) {
+    for (let i = 1; i <= manifest.length; i++) {
         const element = imagesCollection[`image${i}`];
         element.bmpDezoom.alpha = 0;
         element.bmpZoom.alpha = 0;
@@ -392,13 +438,12 @@ function updateCurrentImage() {
 }
 
 function updateCountText() {
-    countText.text = `${slideIndex} / ${nbImages}`
+    countText.text = `${slideIndex} / ${manifest.length}`
 }
 
 function handleFileLoad(e) {
     const image = e.result;
-    console.log(image.width, image.height)
-    let minSizes = image.width < image.height ? { imgSize: image.width, canvasSize: 1920 } : { imgSize: image.height, canvasSize: 1080 };
+    // let minSizes = image.width < image.height ? { imgSize: image.width, canvasSize: 1920 } : { imgSize: image.height, canvasSize: 1080 };
     // image.minDezoom = (minSizes.canvasSize - (paddingTop + paddingBottom)) / minSizes.imgSize;
     image.minDezoom = (canvas.height - (paddingTop + paddingBottom)) / image.height;
 
@@ -428,30 +473,56 @@ function handleFileLoad(e) {
     image.bmpDezoom = bmp;
     image.bmpZoom = bmp2;
     imagesCollection[`${e.item.id}`] = image;
+
+
+    // createjs.Ticker.on('tick', () => {
+    //     updateCurrentImage()
+    // }, null, true)
+
+
+    // if (indexImgToLoad < manifest.length) {
+    //     indexImgToLoad++
+    //    
+    // } else {
+    //     handleComplete()
+    // }
+}
+
+function handleProgress(e) {
+    console.log(e.loaded);
+    textLoader.text = `Loading ${Math.round(e.loaded * 100)} %`;
+    //     preload.loadFile({ id: `image${indexImgToLoad}`, src: `images/image${indexImgToLoad}.jpg` });
+}
+
+function handleComplete() {
+    clickAllowed = true
+    currentImage = imagesCollection[`image${1}`];
 }
 
 function handleDown(e) {
+    if (!clickAllowed) return
     // e.preventDefault();
     // console.log("down");
     // text1.text = e.type
     const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
-    if (distance(mousePoint, shapeMask) > maskRadius) {
-        isDragging = false;
-        return;
-    } else {
-        isDragging = true;
-    }
     shapeMask.offsetX = (stage.mouseX - canvas.width / 2) - shapeMask.x
     shapeMask.offsetY = (stage.mouseY - canvas.height / 2) - shapeMask.y
+    if (distance(mousePoint, shapeMask) > maskRadius) return;
+
     onDrag(e);
 }
 
 function handleUp(e) {
+    if (!clickAllowed) return
+    const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
+    if (distance(mousePoint, shapeMask) > maskRadius) return;
     onDrag(e);
-    isDragging = false;
 }
 
 function handleMove(e) {
+    if (!clickAllowed) return
+    const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
+    if (distance(mousePoint, shapeMask) > maskRadius) return;
     // e.preventDefault();
     // console.log("move");
     // text1.text = e.type
@@ -465,8 +536,14 @@ function onDrag(e) {
         y: stage.mouseY - canvas.height / 2 - shapeMask.offsetY,
     })
 
-    const ratioX = (stage.mouseX - canvas.width / 2 - shapeMask.offsetX - containerDezoom.x) / ((currentImage.width / 2) * currentImage.minDezoom);
-    const ratioY = (stage.mouseY - canvas.height / 2 - shapeMask.offsetY - containerDezoom.y) / ((currentImage.height / 2) * currentImage.minDezoom);
+    if (shapeMask.x < -(currentImage.width / 2) * currentImage.minDezoom) shapeMask.x = -(currentImage.width / 2) * currentImage.minDezoom
+    if (shapeMask.x > (currentImage.width / 2) * currentImage.minDezoom) shapeMask.x = (currentImage.width / 2) * currentImage.minDezoom
+
+    if (shapeMask.y < -(currentImage.height / 2) * currentImage.minDezoom) shapeMask.y = -(currentImage.height / 2) * currentImage.minDezoom
+    if (shapeMask.y > (currentImage.height / 2) * currentImage.minDezoom) shapeMask.y = (currentImage.height / 2) * currentImage.minDezoom
+
+    const ratioX = (shapeMask.x - containerDezoom.x) / ((currentImage.width / 2) * currentImage.minDezoom);
+    const ratioY = (shapeMask.y - containerDezoom.y) / ((currentImage.height / 2) * currentImage.minDezoom);
 
     const dx = ((currentImage.width / 2) * currentImage.minDezoom * (maxZoom - 1)) * ratioX;
     const dy = ((currentImage.height / 2) * currentImage.minDezoom * (maxZoom - 1)) * ratioY;
