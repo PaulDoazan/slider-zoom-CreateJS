@@ -1,5 +1,5 @@
 // Details to improve :
-// --
+// -- limit drag&drop
 
 let stage,
     canvasW,
@@ -25,7 +25,8 @@ let stage,
     countText,
     nbImageLoaded,
     imagesCollection,
-    nbImages;
+    nbImages,
+    text1;
 
 const paddingTop = 50;
 const paddingBottom = 150;
@@ -47,6 +48,7 @@ function init() {
 }
 
 function setUp() {
+    previousSlideIndex = 0
     slideDirection = 1
     imagesArray = [];
     imagesCollection = {};
@@ -62,6 +64,10 @@ function setUp() {
     g.drawRect(0, 0, canvas.width, canvas.height);
 
     let sh = new createjs.Shape(g);
+
+    text1 = new createjs.Text(`TEST`, "20px Arial", colorNavbar);
+    text1.x = canvas.width - 100;
+    text1.y = canvas.height / 2;
 
     stage.addChild(sh)
 
@@ -107,6 +113,9 @@ function setUp() {
 
     clickArea.on("mousedown", handleDown);
     clickArea.on("pressup", handleUp);
+    // canvas.addEventListener("touchstart", handleDown)
+    // canvas.addEventListener("touchend", handleUp)
+    // canvas.addEventListener("touchmove", handleMove)
     clickArea.on("pressmove", handleMove);
 }
 
@@ -304,7 +313,6 @@ function onArrowDown(e) {
         slideDirection = -1
         slideIndex += slideDirection
         if (slideIndex <= 0) {
-            previousSlideIndex = 0
             slideIndex = 0
         }
     } else {
@@ -335,14 +343,13 @@ function updateArrows() {
 function updateCurrentImage() {
     const tweenDuration = 1000
     const easeType = createjs.Ease.quintInOut;
+    const deltaTweening = 1
     currentImage = imagesCollection[`image${slideIndex}`];
     for (let i = 1; i <= nbImages; i++) {
         const element = imagesCollection[`image${i}`];
         element.bmpDezoom.alpha = 0;
         element.bmpZoom.alpha = 0;
     }
-
-    if (!currentImage) return
 
     if (previousSlideIndex !== 0) {
         let previousImage = imagesCollection[`image${previousSlideIndex}`];
@@ -363,19 +370,19 @@ function updateCurrentImage() {
         createjs.Tween.get(previousImage.bmpZoom).to({
             alpha: 0,
             // x: previousImage.width * previousImage.bmpZoom.scaleX * -slideDirection
-        }, tweenDuration / 2, easeType).wait(tweenDuration / 2).call(() => {
+        }, tweenDuration / deltaTweening, easeType).wait(tweenDuration - tweenDuration / deltaTweening).call(() => {
             if (!currentImage) return
             createjs.Tween.get(currentImage.bmpZoom).to({
                 alpha: 1,
                 // x: currentImage.width * currentImage.bmpZoom.scaleX * -slideDirection
-            }, tweenDuration * 2, easeType, createjs.Ease.quintInOut)
+            }, tweenDuration * deltaTweening, easeType, createjs.Ease.quintInOut)
         })
     } else {
         if (!currentImage) return
         createjs.Tween.get(currentImage.bmpZoom).to({
             alpha: 1,
             // x: currentImage.width * currentImage.bmpZoom.scaleX * -slideDirection
-        }, tweenDuration * 2, easeType)
+        }, tweenDuration * deltaTweening, easeType)
 
         createjs.Tween.get(currentImage.bmpDezoom).to({
             alpha: 1,
@@ -390,8 +397,10 @@ function updateCountText() {
 
 function handleFileLoad(e) {
     const image = e.result;
+    console.log(image.width, image.height)
     let minSizes = image.width < image.height ? { imgSize: image.width, canvasSize: 1920 } : { imgSize: image.height, canvasSize: 1080 };
-    image.minDezoom = (minSizes.canvasSize - (paddingTop + paddingBottom)) / minSizes.imgSize;
+    // image.minDezoom = (minSizes.canvasSize - (paddingTop + paddingBottom)) / minSizes.imgSize;
+    image.minDezoom = (canvas.height - (paddingTop + paddingBottom)) / image.height;
 
     const bmp = new createjs.Bitmap(image).set({
         scaleX: image.minDezoom,
@@ -422,6 +431,9 @@ function handleFileLoad(e) {
 }
 
 function handleDown(e) {
+    // e.preventDefault();
+    // console.log("down");
+    // text1.text = e.type
     const mousePoint = { x: stage.mouseX - canvas.width / 2, y: stage.mouseY - canvas.height / 2 }
     if (distance(mousePoint, shapeMask) > maskRadius) {
         isDragging = false;
@@ -435,13 +447,15 @@ function handleDown(e) {
 }
 
 function handleUp(e) {
-    if (!isDragging) return;
     onDrag(e);
     isDragging = false;
 }
 
 function handleMove(e) {
-    if (!isDragging) return;
+    // e.preventDefault();
+    // console.log("move");
+    // text1.text = e.type
+    // if (!isDragging) return;
     onDrag(e);
 }
 
