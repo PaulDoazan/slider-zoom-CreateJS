@@ -6,7 +6,7 @@ const manifest = [
     { src: "image5.jpg", id: "image5", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Moïse frappant<br>le rocher" } },
     { src: "image6.jpg", id: "image6", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Dieu envoyant le<br>serpent d’Airain<br>pour guérir les<br>israélites " } },
     { src: "image7.jpg", id: "image7", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Groupe de personnages occupé<br>à boire. Les représentations<br>où les gens boivent sont<br>nombreuses dans l’œuvre<br>de Raymond Lafage" } },
-    { src: "image8.jpg", id: "image8", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "L’artiste a pour volonté de<br>mettre en avant la musculature<br>de cet homme qui est<br>vraisemblablement agressif<br>et a la volonté de frapper." } },
+    { src: "image8.png", id: "image8", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "L’artiste a pour volonté de<br>mettre en avant la musculature<br>de cet homme qui est<br>vraisemblablement agressif<br>et a la volonté de frapper." } },
     { src: "image9.jpg", id: "image9", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Visage déformé<br>par la peur.<br>Impression que<br>l’œuvre n’est pas<br>achevée..." } },
     { src: "image10.jpg", id: "image10", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Le geste de Moïse,<br>ce bras tendu<br>résume à lui seul<br>toute la force<br>du dessin" } },
     { src: "image11.jpg", id: "image11", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Les positions des<br>mains et le désarroi<br>lisible sur les<br>visages résument<br>parfaitement la<br>tension dramatique<br>qui se joue dans<br>cette œuvre" } },
@@ -149,22 +149,22 @@ function setUp() {
     // grCircle.setStrokeStyle(15);
     // grCircle.beginLinearGradientStroke(["#aaa", "#333"], [0, 1], -maskRadius, -maskRadius, maskRadius, maskRadius)
     // grCircle.drawCircle(0, 0, maskRadius);
-    const glassBmp = new createjs.Bitmap("images/glass.png");
+    const glassBmp = new createjs.Bitmap("images/glass_gradient.png");
     glassBmp.set({
-        x: -300,
-        y: -85
+        x: -270,
+        y: -110
     })
     glassContainer = new createjs.Container()
     glassContainer.set({
-        scaleX: 0.47,
-        scaleY: 0.47,
+        scaleX: 0.58,
+        scaleY: 0.58,
         regX: 490,
         regY: 490,
     })
 
     const grGlass = new createjs.Graphics()
     grGlass.beginFill("rgba(255,255,255,0.01)");
-    grGlass.drawCircle(495, 495, maskRadius * (1 / 0.47));
+    grGlass.drawCircle(495, 495, maskRadius * (1 / 0.58));
     const shapeGlass = new createjs.Shape(grGlass)
 
     glassContainer.addChild(shapeGlass, glassBmp)
@@ -357,7 +357,7 @@ function drawLines() {
     let gr = new createjs.Graphics()
     linesShape = new createjs.Shape(gr);
 
-    linesShape.y = -250;
+    linesShape.y = -350;
 
     gr.setStrokeStyle(thickness)
     gr.beginStroke(colorNavbar);
