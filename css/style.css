@@ -12,11 +12,35 @@
        url('montecarlo-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+}
+
+@font-face {
+  font-family: 'ciutadellabold';
+  src: url('ciutadella_bold-webfont.woff2') format('woff2'),
+       url('ciutadella_bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 
 }
 
+@font-face {
+  font-family: 'ciutadellaitalic';
+  src: url('ciutadella_regular_italic-webfont.woff2') format('woff2'),
+       url('ciutadella_regular_italic-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ciutadellaregular';
+  src: url('ciutadella_regular-webfont.woff2') format('woff2'),
+       url('ciutadella_regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
-    background-color: white;
+    background-color: #c9755b;
 }
 
 .canvas-container {
@@ -37,10 +61,53 @@ body {
 }
 
 .home-title {
-  margin-top: 300px;
+  margin-top: 28vh;
   text-align: center;
-  color: white;
+  color: #fbf0e4;
   font-weight: 500;
-  font-size: 46px;
+  font-size: 60px;
   font-family: 'montecarloregular';
+}
+
+.info-container {
+  position: absolute;
+  z-index: -1;
+  top: 4.7vh;
+  right: 2.6vw;
+  float: right;
+  background-color: #fbf0e4;
+  width: 29.3vw;
+  pointer-events: none;
+  padding: 3vw;
+  opacity: 0;
+  transition: all .25s ease-out;
+}
+
+.info-content {
+  text-align: center;
+  color: rgb(6, 5, 0);
+  font-size: 30px;
+  font-weight: 500;
+  font-family: 'ciutadellaregular';
+}
+
+.info-btn {
+  position: absolute;
+  text-align: center;
+  font-size: 30px;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+  width: 1.8vw;
+  height: 1.8vw;
+  background-color: #00728d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thick-line {
+    width: 0.9vw;
+    height: 0.15vw;
+    background-color: #fbf0e4;
 }
