@@ -4,50 +4,52 @@ const manifest = [
     { src: "image3.jpg", id: "image3", infos: null },
     { src: "image4.jpg", id: "image4", infos: { width: 29.3, paddingTop: 3, paddingLeft: 3, content: "Portait de Raymond Lafage<br>interprété par Cornelis Vermeulen" } },
     { src: "image5.jpg", id: "image5", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Moïse frappant<br>le rocher" } },
-    { src: "image6.jpg", id: "image6", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Dieu envoyant le<br>serpent d’Airain<br>pour guérir les<br>israélites " } },
-    { src: "image7.jpg", id: "image7", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Groupe de personnages occupé<br>à boire. Les représentations<br>où les gens boivent sont<br>nombreuses dans l’œuvre<br>de Raymond Lafage" } },
-    { src: "image8.png", id: "image8", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "L’artiste a pour volonté de<br>mettre en avant la musculature<br>de cet homme qui est<br>vraisemblablement agressif<br>et a la volonté de frapper." } },
-    { src: "image9.jpg", id: "image9", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Visage déformé<br>par la peur.<br>Impression que<br>l’œuvre n’est pas<br>achevée..." } },
-    { src: "image10.jpg", id: "image10", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Le geste de Moïse,<br>ce bras tendu<br>résume à lui seul<br>toute la force<br>du dessin" } },
-    { src: "image11.jpg", id: "image11", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Les positions des<br>mains et le désarroi<br>lisible sur les<br>visages résument<br>parfaitement la<br>tension dramatique<br>qui se joue dans<br>cette œuvre" } },
-    { src: "image12.jpg", id: "image12", infos: { width: 15.5, paddingTop: 2, paddingLeft: 2, content: "Deux combattants<br>s’opposent l’un à<br>l’autre, tant dans<br>leur combat que<br>dans leur posture<br>et même dans<br>leur façon d’être<br>vêtu. Opposition<br>d’un homme<br>en armure à un<br>homme nu. Ces<br>deux personnages<br>résument<br>l’intensité et<br>la violence de<br>la scène." } },
-    { src: "image13.jpg", id: "image13", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Les personnages<br>centraux sont<br>statiques, semblant<br>réfléchir, penser,<br>prenant le temps.<br>Les temps de pauses<br>sont plutôt rares<br>dans l’œuvre de<br>Raymond Lafage" } },
-    { src: "image14.jpg", id: "image14", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "À travers la posture<br>et le visage de<br>l’homme, l’artiste<br>retranscrit toute la<br>détresse et la gravité<br>d’une telle scène" } },
-    { src: "image15.jpg", id: "image15", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Grâce à l’intensité du geste<br>et en quelques traits l’artiste<br>trouve le moyen de donner vie et<br>mouvement à son œuvre" } },
-    { src: "image16.jpg", id: "image16", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Les musiciens sont<br>souvent présents<br>dans l’œuvre de<br>Raymond Lafage..." } },
-    { src: "image17.jpg", id: "image17", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "... tout comme les<br>scènes de danse" } },
-    { src: "image18.jpg", id: "image18", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Cette œuvre intitulée <i>La danse</i><br><i>en rond</i>, présente un satyre<br>jouant de la flûte de pan et<br>faisant danser le groupe de<br>jeunes gens qui l’encerclent.<br>En une seule représentation<br>nous retrouvons à la fois la<br>musique et la danse." } },
-    { src: "image19.jpg", id: "image19", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Les personnages féminins sont<br>généralement représentés avec<br>beaucoup de grâce." } },
-    { src: "image20.jpg", id: "image20", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Le dieu Bacchus<br>enfant assis sur<br>un lion" } },
-    { src: "image21.jpg", id: "image21", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Scène d’ivresse" } },
-    { src: "image22.jpg", id: "image22", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Portrait de<br>Raymond Lafage.<br>Il est fréquent<br>de retrouver des<br>autoportraits<br>de l’artiste dans<br>ses œuvres. " } },
-    { src: "image23.jpg", id: "image23", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Groupe de<br>personnages<br>avec satyre" } },
-    { src: "image24.jpg", id: "image24", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Les<br>musculatures<br>sont souvent<br>prononcées<br>qu’il s’agisse<br>d’œuvres<br>bibliques ou<br>mythologiques<br>et peu importe le<br>personnage.<br>Ici, un satyre vu<br>de dos." } },
-    { src: "image25.jpg", id: "image25", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Au milieu de<br>cette scène de<br>bacchanale,<br>un personnage<br>reste statique... " } },
-    { src: "image26.jpg", id: "image26", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Diane, déesse<br>de la nature<br>sauvage, de la<br>chasse et des<br>accouchements<br>possède pour<br>attributs<br>principaux un<br>arc, un carquois,<br>des flèches et un<br>croissant de lune." } },
-    { src: "image27.jpg", id: "image27", infos: { width: 15.2, paddingTop: 2, paddingLeft: 2, content: "Portrait de<br>Raymond Lafage<br>au milieu d’une<br>bacchanale." } },
-    { src: "image28.jpg", id: "image28", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Personnage féminin<br>au paon." } },
-    { src: "image29.jpg", id: "image29", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Personnages<br>dansants." } },
-    { src: "image30.jpg", id: "image30", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Cortège triomphal<br>avec éléphants." } },
-    { src: "image31.jpg", id: "image31", infos: { width: 25, paddingTop: 2, paddingLeft: 2, content: "Un homme chute d’un âne, petit<br>clin d'œil à la mort de l’artiste" } },
-    { src: "image32.jpg", id: "image32", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Musicien et buveur<br>faisant la fête." } },
-    { src: "image33.jpg", id: "image33", infos: { width: 40, paddingTop: 2, paddingLeft: 2, content: "Groupe composé d’hommes, d’un enfant et d’un satyre<br>soutenant et couronnant une jeune femme." } },
-    { src: "image34.jpg", id: "image34", infos: { width: 14, paddingTop: 2, paddingLeft: 2, content: "Grâce féminine..." } },
-    { src: "image35.jpg", id: "image35", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Scène au char lors<br>d’une procession" } },
-    { src: "image36.jpg", id: "image36", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Regroupement de<br>personnages figés<br>dans une scène<br>d’offrande." } },
-    { src: "image37.jpg", id: "image37", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Scène aquatique" } },
-    { src: "image38.jpg", id: "image38", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Homme à dos d’âne" } },
-    { src: "image39.jpg", id: "image39", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Musique et<br>acrobaties, une<br>scène pleine d’élan" } },
-    { src: "image40.jpg", id: "image40", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Hommes nus<br>statiques au milieu<br>d’un cortège<br>dansant" } },
-    { src: "image41.jpg", id: "image41", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Scène de banquet<br>et d’ivresse" } },
-    { src: "image42.jpg", id: "image42", infos: { width: 23, paddingTop: 2, paddingLeft: 2, content: "Thème biblique classique,<br>œuvre où l’on peut lire la peur<br>sur le visage de cette mère<br>protégeant ses enfants." } },
-    { src: "image43.jpg", id: "image43", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Représentation<br>biblique illustrée de<br>façon héroïque" } },
-    { src: "image44.jpg", id: "image44", infos: null },
+    // { src: "image6.jpg", id: "image6", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Dieu envoyant le<br>serpent d’Airain<br>pour guérir les<br>israélites " } },
+    // { src: "image7.jpg", id: "image7", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Groupe de personnages occupé<br>à boire. Les représentations<br>où les gens boivent sont<br>nombreuses dans l’œuvre<br>de Raymond Lafage" } },
+    // { src: "image8.png", id: "image8", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "L’artiste a pour volonté de<br>mettre en avant la musculature<br>de cet homme qui est<br>vraisemblablement agressif<br>et a la volonté de frapper." } },
+    // { src: "image9.jpg", id: "image9", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Visage déformé<br>par la peur.<br>Impression que<br>l’œuvre n’est pas<br>achevée..." } },
+    // { src: "image10.jpg", id: "image10", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Le geste de Moïse,<br>ce bras tendu<br>résume à lui seul<br>toute la force<br>du dessin" } },
+    // { src: "image11.jpg", id: "image11", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "Les positions des<br>mains et le désarroi<br>lisible sur les<br>visages résument<br>parfaitement la<br>tension dramatique<br>qui se joue dans<br>cette œuvre" } },
+    // { src: "image12.jpg", id: "image12", infos: { width: 15.5, paddingTop: 2, paddingLeft: 2, content: "Deux combattants<br>s’opposent l’un à<br>l’autre, tant dans<br>leur combat que<br>dans leur posture<br>et même dans<br>leur façon d’être<br>vêtu. Opposition<br>d’un homme<br>en armure à un<br>homme nu. Ces<br>deux personnages<br>résument<br>l’intensité et<br>la violence de<br>la scène." } },
+    // { src: "image13.jpg", id: "image13", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Les personnages<br>centraux sont<br>statiques, semblant<br>réfléchir, penser,<br>prenant le temps.<br>Les temps de pauses<br>sont plutôt rares<br>dans l’œuvre de<br>Raymond Lafage" } },
+    // { src: "image14.jpg", id: "image14", infos: { width: 16.5, paddingTop: 2, paddingLeft: 2, content: "À travers la posture<br>et le visage de<br>l’homme, l’artiste<br>retranscrit toute la<br>détresse et la gravité<br>d’une telle scène" } },
+    // { src: "image15.jpg", id: "image15", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Grâce à l’intensité du geste<br>et en quelques traits l’artiste<br>trouve le moyen de donner vie et<br>mouvement à son œuvre" } },
+    // { src: "image16.jpg", id: "image16", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Les musiciens sont<br>souvent présents<br>dans l’œuvre de<br>Raymond Lafage..." } },
+    // { src: "image17.jpg", id: "image17", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "... tout comme les<br>scènes de danse" } },
+    // { src: "image18.jpg", id: "image18", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Cette œuvre intitulée <i>La danse</i><br><i>en rond</i>, présente un satyre<br>jouant de la flûte de pan et<br>faisant danser le groupe de<br>jeunes gens qui l’encerclent.<br>En une seule représentation<br>nous retrouvons à la fois la<br>musique et la danse." } },
+    // { src: "image19.jpg", id: "image19", infos: { width: 22.5, paddingTop: 2, paddingLeft: 1.4, content: "Les personnages féminins sont<br>généralement représentés avec<br>beaucoup de grâce." } },
+    // { src: "image20.jpg", id: "image20", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Le dieu Bacchus<br>enfant assis sur<br>un lion" } },
+    // { src: "image21.jpg", id: "image21", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Scène d’ivresse" } },
+    // { src: "image22.jpg", id: "image22", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Portrait de<br>Raymond Lafage.<br>Il est fréquent<br>de retrouver des<br>autoportraits<br>de l’artiste dans<br>ses œuvres. " } },
+    // { src: "image23.jpg", id: "image23", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Groupe de<br>personnages<br>avec satyre" } },
+    // { src: "image24.jpg", id: "image24", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Les<br>musculatures<br>sont souvent<br>prononcées<br>qu’il s’agisse<br>d’œuvres<br>bibliques ou<br>mythologiques<br>et peu importe le<br>personnage.<br>Ici, un satyre vu<br>de dos." } },
+    // { src: "image25.jpg", id: "image25", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Au milieu de<br>cette scène de<br>bacchanale,<br>un personnage<br>reste statique... " } },
+    // { src: "image26.jpg", id: "image26", infos: { width: 14, paddingTop: 2, paddingLeft: 1.4, content: "Diane, déesse<br>de la nature<br>sauvage, de la<br>chasse et des<br>accouchements<br>possède pour<br>attributs<br>principaux un<br>arc, un carquois,<br>des flèches et un<br>croissant de lune." } },
+    // { src: "image27.jpg", id: "image27", infos: { width: 15.2, paddingTop: 2, paddingLeft: 2, content: "Portrait de<br>Raymond Lafage<br>au milieu d’une<br>bacchanale." } },
+    // { src: "image28.jpg", id: "image28", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Personnage féminin<br>au paon." } },
+    // { src: "image29.jpg", id: "image29", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Personnages<br>dansants." } },
+    // { src: "image30.jpg", id: "image30", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Cortège triomphal<br>avec éléphants." } },
+    // { src: "image31.jpg", id: "image31", infos: { width: 25, paddingTop: 2, paddingLeft: 2, content: "Un homme chute d’un âne, petit<br>clin d'œil à la mort de l’artiste" } },
+    // { src: "image32.jpg", id: "image32", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Musicien et buveur<br>faisant la fête." } },
+    // { src: "image33.jpg", id: "image33", infos: { width: 40, paddingTop: 2, paddingLeft: 2, content: "Groupe composé d’hommes, d’un enfant et d’un satyre<br>soutenant et couronnant une jeune femme." } },
+    // { src: "image34.jpg", id: "image34", infos: { width: 14, paddingTop: 2, paddingLeft: 2, content: "Grâce féminine..." } },
+    // { src: "image35.jpg", id: "image35", infos: { width: 15, paddingTop: 2, paddingLeft: 2, content: "Scène au char lors<br>d’une procession" } },
+    // { src: "image36.jpg", id: "image36", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Regroupement de<br>personnages figés<br>dans une scène<br>d’offrande." } },
+    // { src: "image37.jpg", id: "image37", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Scène aquatique" } },
+    // { src: "image38.jpg", id: "image38", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Homme à dos d’âne" } },
+    // { src: "image39.jpg", id: "image39", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Musique et<br>acrobaties, une<br>scène pleine d’élan" } },
+    // { src: "image40.jpg", id: "image40", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Hommes nus<br>statiques au milieu<br>d’un cortège<br>dansant" } },
+    // { src: "image41.jpg", id: "image41", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Scène de banquet<br>et d’ivresse" } },
+    // { src: "image42.jpg", id: "image42", infos: { width: 23, paddingTop: 2, paddingLeft: 2, content: "Thème biblique classique,<br>œuvre où l’on peut lire la peur<br>sur le visage de cette mère<br>protégeant ses enfants." } },
+    // { src: "image43.jpg", id: "image43", infos: { width: 17, paddingTop: 2, paddingLeft: 2, content: "Représentation<br>biblique illustrée de<br>façon héroïque" } },
+    // { src: "image44.jpg", id: "image44", infos: null },
 ];
 
 const titleContainer = document.querySelector('.title-container');
 const infoContent = document.querySelector('.info-content');
 const infoContainer = document.querySelector('.info-container');
+const thickVLine = document.querySelector('.thick-v-line');
+const infoBtn = document.querySelector('.info-btn');
 
 const paperColor = "#fbf0e4";
 
@@ -145,15 +147,6 @@ function setUp() {
     gr.drawCircle(0, 0, maskRadius);
     shapeMask = new createjs.Shape(gr)
 
-    // const grCircle = new createjs.Graphics()
-    // grCircle.setStrokeStyle(15);
-    // grCircle.beginLinearGradientStroke(["#aaa", "#333"], [0, 1], -maskRadius, -maskRadius, maskRadius, maskRadius)
-    // grCircle.drawCircle(0, 0, maskRadius);
-    const glassBmp = new createjs.Bitmap("images/glass_gradient.png");
-    glassBmp.set({
-        x: -270,
-        y: -110
-    })
     glassContainer = new createjs.Container()
     glassContainer.set({
         scaleX: 0.58,
@@ -163,11 +156,13 @@ function setUp() {
     })
 
     const grGlass = new createjs.Graphics()
+    grGlass.setStrokeStyle(20)
+    grGlass.beginStroke("#00728d");
     grGlass.beginFill("rgba(255,255,255,0.01)");
     grGlass.drawCircle(495, 495, maskRadius * (1 / 0.58));
     const shapeGlass = new createjs.Shape(grGlass)
 
-    glassContainer.addChild(shapeGlass, glassBmp)
+    glassContainer.addChild(shapeGlass)
 
     shapeMask.set({
         offsetX: 0,
@@ -232,32 +227,24 @@ function setNavBar() {
 
 function drawLent() {
     pictoContainer = new createjs.Container()
-    const picto = new createjs.Bitmap("images/picto.png");
+    const picto = new createjs.Bitmap("images/loupe_etat_2.png");
     pictoContainer.set({
         regX: 50,
         regY: 50,
-        scaleX: 0.7,
-        scaleY: 0.7,
+        scaleX: 0.07,
+        scaleY: 0.07,
     })
     pictoContainer.x = 80
-    pictoContainer.y = 100
+    pictoContainer.y = 50
 
-    const g = new createjs.Graphics();
-    crossPictoShape = new createjs.Shape(g)
+    crossPictoShape = new createjs.Bitmap("images/loupe_etat_1.png");
     pictoContainer.visible = false
 
     const gb = new createjs.Graphics();
     const bg = new createjs.Shape(gb)
 
     gb.beginFill('rgba(201, 117, 91, 0.01)')
-    // gb.beginFill('black')
     gb.drawCircle(50, 50, 80)
-
-    g.setStrokeStyle(8, 'round')
-    g.beginStroke(paperColor)
-
-    g.moveTo(18, -2)
-    g.lineTo(98, 78)
 
     pictoContainer.addChild(bg, picto, crossPictoShape);
     navbarContainer.addChild(pictoContainer);
@@ -482,18 +469,20 @@ function updateCurrentImage() {
 
     if (currentImage) currentImage.bmpZoom.visible = !crossPictoShape.visible
 
-    infoContainer.style.opacity = 0
+    infoContainer.style.opacity = infoBtn.style.opacity = 0
 
     if (slideIndex === 0) {
         titleContainer.style.display = 'block'
         sliderContainer.visible = false;
         pictoContainer.visible = false;
         infoContainer.style.transition = 'none'
+        infoBtn.style.transition = 'none'
     } else {
         titleContainer.style.display = 'none'
         sliderContainer.visible = true;
         pictoContainer.visible = true;
         infoContainer.style.transition = 'all .3s ease-in-out'
+        infoBtn.style.transition = 'all .3s ease-in-out'
     }
 
     for (let i = 1; i <= manifest.length; i++) {
@@ -548,7 +537,7 @@ function updateCurrentImage() {
 
 function showInfos() {
     if (!currentImage || !currentImage.infos) return;
-    infoContainer.style.opacity = 1
+    infoContainer.style.opacity = infoBtn.style.opacity = 1
     infoContainer.style.paddingTop = `${currentImage.infos.paddingTop}vw`
     infoContainer.style.paddingBottom = `${currentImage.infos.paddingTop}vw`
     infoContainer.style.paddingLeft = `${currentImage.infos.paddingLeft}vw`
@@ -573,14 +562,14 @@ function handleFileLoad(e) {
         scaleX: image.minDezoom,
         scaleY: image.minDezoom,
         regX: image.width / 2, regY: image.height / 2,
-        alpha: 0.01
+        alpha: 0.03
     });
 
     const bmp2 = new createjs.Bitmap(image).set({
         scaleX: image.minDezoom * maxZoom,
         scaleY: image.minDezoom * maxZoom,
         regX: image.width / 2, regY: image.height / 2,
-        alpha: 0.01
+        alpha: 0.03
     });
 
     createjs.Ticker.on('tick', () => {
