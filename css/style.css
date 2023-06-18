@@ -80,7 +80,7 @@ body {
   pointer-events: none;
   padding: 3vw;
   opacity: 0;
-  transition: opacity .3s ease-out;
+  transition: opacity .6s ease-out;
 }
 
 .info-content {

@@ -495,8 +495,8 @@ function updateCurrentImage() {
         titleContainer.style.display = 'none'
         sliderContainer.visible = true;
         pictoContainer.visible = true;
-        infoContainer.style.transition = 'opacity .3s ease-in-out'
-        infoBtn.style.transition = 'opacity .3s ease-in-out'
+        infoContainer.style.transition = 'opacity .6s ease-in-out'
+        infoBtn.style.transition = 'opacity .6s ease-in-out'
     }
 
     for (let i = 1; i <= manifest.length; i++) {
