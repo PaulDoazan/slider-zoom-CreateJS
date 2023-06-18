@@ -203,13 +203,7 @@ function setUp() {
 
 function onBtnInfoChange(e) {
     e.currentTarget.isPlus = !e.currentTarget.isPlus
-    if (e.currentTarget.isPlus) {
-        thickVLine.style.display = 'block'
-        thickLine.style.width = '1.3vw'
-    } else {
-        thickVLine.style.display = 'none'
-        thickLine.style.width = '1.5vw'
-    }
+
     showInfos()
 }
 
@@ -551,6 +545,7 @@ function updateCurrentImage() {
 
 function showInfos() {
     if (!currentImage || !currentImage.infos) return;
+
     infoContainer.style.transition = 'opacity 1s ease-in-out'
     infoBtn.style.transition = 'opacity 1s ease-in-out'
     infoContainer.style.opacity = infoBtn.style.opacity = 1
@@ -558,11 +553,15 @@ function showInfos() {
     infoContainer.style.paddingRight = `${currentImage.infos.paddingLeft}vw`
     infoContainer.style.width = `${currentImage.infos.width}vw`
     if (infoBtn.isPlus) {
+        thickVLine.style.display = 'block'
+        thickLine.style.width = '1.3vw'
         infoContainer.style.paddingTop = `2.5vw`
         infoContainer.style.paddingBottom = `0vw`
-        infoContent.style.opacity = 0
+        // infoContent.style.opacity = 0
         infoContent.innerHTML = '';
     } else {
+        thickVLine.style.display = 'none'
+        thickLine.style.width = '1.5vw'
         infoContainer.style.paddingTop = `${currentImage.infos.paddingTop}vw`
         if (slideIndex >= 28 && slideIndex < 34) {
             infoContainer.style.paddingBottom = `1.5vw`
@@ -570,7 +569,7 @@ function showInfos() {
             infoContainer.style.paddingBottom = `${currentImage.infos.paddingTop}vw`
         }
         infoContent.innerHTML = currentImage.infos.content;
-        infoContent.style.opacity = 1
+        // infoContent.style.opacity = 1
     }
 
 }
