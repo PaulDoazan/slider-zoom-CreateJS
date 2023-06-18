@@ -80,7 +80,7 @@ body {
   pointer-events: none;
   padding: 3vw;
   opacity: 0;
-  transition: all .3s ease-out;
+  transition: opacity .3s ease-out;
 }
 
 .info-content {
@@ -89,7 +89,7 @@ body {
   font-size: 30px;
   font-weight: 500;
   font-family: 'ciutadellaregular';
-  transition: all .5s ease-out;
+  /* transition: opacity .5s ease-out; */
 }
 
 .info-btn {

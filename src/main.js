@@ -263,7 +263,7 @@ function drawLent() {
     pictoContainer.addChild(bg, picto, crossPictoShape);
     navbarContainer.addChild(pictoContainer);
 
-    pictoContainer.on('mousedown', () => {
+    pictoContainer.on('click', () => {
         crossPictoShape.visible = !crossPictoShape.visible
         if (crossPictoShape.visible) {
             if (currentImage) currentImage.bmpZoom.visible = false
@@ -495,8 +495,8 @@ function updateCurrentImage() {
         titleContainer.style.display = 'none'
         sliderContainer.visible = true;
         pictoContainer.visible = true;
-        infoContainer.style.transition = 'all .3s ease-in-out'
-        infoBtn.style.transition = 'all .3s ease-in-out'
+        infoContainer.style.transition = 'opacity .3s ease-in-out'
+        infoBtn.style.transition = 'opacity .3s ease-in-out'
     }
 
     for (let i = 1; i <= manifest.length; i++) {
