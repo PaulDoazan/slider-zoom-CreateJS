@@ -89,6 +89,7 @@ body {
   font-size: 30px;
   font-weight: 500;
   font-family: 'ciutadellaregular';
+  transition: all .5s ease-out;
 }
 
 .info-btn {
@@ -97,9 +98,9 @@ body {
   font-size: 30px;
   top: 4.7vh;
   right: 2.6vw;
-  border-radius: 50%;
-  width: 1.8vw;
-  height: 1.8vw;
+  /* border-radius: 50%; */
+  width: 2.5vw;
+  height: 2.5vw;
   background-color: #00728d;
   display: flex;
   align-items: center;
@@ -109,16 +110,18 @@ body {
 
 .thick-line {
   position: absolute;
-    width: 0.9vw;
-    height: 0.15vw;
-    background-color: #fbf0e4;
+  width: 1.5vw;
+  height: 0.18vw;
+  border-radius: 99px;
+  background-color: #fbf0e4;
 }
 
 .thick-v-line {
   position: absolute;
   display: none;
-  width: 0.9vw;
-  height: 0.15vw;
+  border-radius: 99px;
+  width: 1.3vw;
+  height: 0.18vw;
   rotate: 90deg;
   background-color: #fbf0e4;
 }
