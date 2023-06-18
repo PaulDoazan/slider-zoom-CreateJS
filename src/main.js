@@ -483,20 +483,20 @@ function updateCurrentImage() {
 
     if (currentImage) currentImage.bmpZoom.visible = !crossPictoShape.visible
 
+    infoContainer.style.transition = 'none'
+    infoBtn.style.transition = 'none'
     infoContainer.style.opacity = infoBtn.style.opacity = 0
 
     if (slideIndex === 0) {
         titleContainer.style.display = 'block'
         sliderContainer.visible = false;
         pictoContainer.visible = false;
-        infoContainer.style.transition = 'none'
-        infoBtn.style.transition = 'none'
+        infoContainer.style.opacity = 0
+        infoBtn.style.opacity = 0
     } else {
         titleContainer.style.display = 'none'
         sliderContainer.visible = true;
         pictoContainer.visible = true;
-        infoContainer.style.transition = 'opacity .6s ease-in-out'
-        infoBtn.style.transition = 'opacity .6s ease-in-out'
     }
 
     for (let i = 1; i <= manifest.length; i++) {
@@ -551,6 +551,8 @@ function updateCurrentImage() {
 
 function showInfos() {
     if (!currentImage || !currentImage.infos) return;
+    infoContainer.style.transition = 'opacity 1s ease-in-out'
+    infoBtn.style.transition = 'opacity 1s ease-in-out'
     infoContainer.style.opacity = infoBtn.style.opacity = 1
     infoContainer.style.paddingLeft = `${currentImage.infos.paddingLeft}vw`
     infoContainer.style.paddingRight = `${currentImage.infos.paddingLeft}vw`
