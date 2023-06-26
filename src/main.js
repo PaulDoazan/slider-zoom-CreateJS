@@ -553,15 +553,17 @@ function showInfos() {
     infoContainer.style.paddingRight = `${currentImage.infos.paddingLeft}vw`
     infoContainer.style.width = `${currentImage.infos.width}vw`
     if (infoBtn.isPlus) {
-        thickVLine.style.display = 'block'
-        thickLine.style.width = '1.3vw'
+        infoBtn.style.backgroundImage = `url('../images/picto_plus.png')`
+        // thickVLine.style.display = 'block'
+        // thickLine.style.width = '1.3vw'
         infoContainer.style.paddingTop = `2.5vw`
         infoContainer.style.paddingBottom = `0vw`
         // infoContent.style.opacity = 0
         infoContent.innerHTML = '';
     } else {
-        thickVLine.style.display = 'none'
-        thickLine.style.width = '1.5vw'
+        infoBtn.style.backgroundImage = `url('../images/picto_moins.png')`
+        // thickVLine.style.display = 'none'
+        // thickLine.style.width = '1.5vw'
         infoContainer.style.paddingTop = `${currentImage.infos.paddingTop}vw`
         if (slideIndex >= 28 && slideIndex < 34) {
             infoContainer.style.paddingBottom = `1.5vw`

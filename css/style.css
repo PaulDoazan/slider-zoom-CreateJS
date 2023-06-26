@@ -94,14 +94,16 @@ body {
 
 .info-btn {
   position: absolute;
-  text-align: center;
-  font-size: 30px;
+  /* text-align: center; */
+  /* font-size: 30px; */
+  background-image: url('../images/picto_plus.png');
+  background-size: contain;
   top: 4.7vh;
   right: 2.6vw;
   /* border-radius: 50%; */
   width: 2.5vw;
   height: 2.5vw;
-  background-color: #00728d;
+  /* background-color: #00728d; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,19 +111,19 @@ body {
 }
 
 .thick-line {
-  position: absolute;
+  /* position: absolute;
   width: 1.5vw;
   height: 0.18vw;
   border-radius: 99px;
-  background-color: #fbf0e4;
+  background-color: #fbf0e4; */
 }
 
 .thick-v-line {
-  position: absolute;
+  /* position: absolute;
   display: none;
   border-radius: 99px;
   width: 1.3vw;
   height: 0.18vw;
   rotate: 90deg;
-  background-color: #fbf0e4;
+  background-color: #fbf0e4; */
 }
